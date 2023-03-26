@@ -1,0 +1,487 @@
+<nav class="bg-gray-600 p-4 flex justify-between">
+  <div>
+    <button class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded text-xl">
+      Employee Manager
+    </button>
+    <button
+      (click)="openAddModal()"
+      class="text-gray-300 hover:bg-gray-700 px-3 py-2 rounded"
+    >
+      Add Employee
+    </button>
+  </div>
+  <div>
+    <form class="flex">
+      <input
+        (ngModelChange)="searchEmployees(key.value)"
+        #key="ngModel"
+        ngModel
+        name="key"
+        class="rounded-l-lg p-2 bg-gray-900 text-gray-100 outline-none"
+        type="text"
+        placeholder="Search"
+        aria-label="Search"
+      />
+      <button class="px-4 bg-gray-700 text-gray-100 rounded-r-lg">
+        <i class="fa fa-search"></i>
+      </button>
+    </form>
+  </div>
+</nav>
+
+<div class="flex flex-wrap justify-around">
+  <div
+    *ngFor="let employee of employees; let i = index"
+    class="w-[310px] h-[310px] m-2 mb-64"
+  >
+    <div class="bg-[#322977] rounded-t-lg shadow-lg overflow-hidden h-[70%]">
+      <div class="flex justify-center pt-4">
+        <div class="h-24 w-24 rounded-full overflow-hidden">
+          <img
+            class="object-cover w-full h-full"
+            src="{{ employee?.imageUrl }}"
+            alt="{{ employee?.name }}"
+          />
+        </div>
+      </div>
+      <div class="text-center px-2 py-4">
+        <h2 class="font-bold text-xl mb-64 text-gray-100">
+          {{ employee.name }}
+        </h2>
+        <p class="text-gray-100 text-base mb-2">{{ employee?.jobTitle }}</p>
+      </div>
+    </div>
+    <div class="bg-[#66347F] shadow-lg overflow-hidden h-[70%]">
+      <div class="px-6 py-4">
+        <p class="text-gray-300 text-base mb-1">
+          Email : {{ employee?.email }}
+        </p>
+        <p class="text-gray-300 text-base mb-1">
+          Phone no. : {{ employee?.phoneNo }}
+        </p>
+        <p class="text-gray-300 text-base mb-1">
+          Employee Code : {{ employee?.employeeCode }}
+        </p>
+      </div>
+    </div>
+    <div class="bg-[#3795BD] rounded-b-lg shadow-lg overflow-hidden h-[17%]">
+      <div class="flex justify-between px-6 py-2">
+        <div class="w-1/2">
+          <button
+            class="text-white px-4 py-2 rounded-md hover:bg-gray-600"
+            (click)="openEditModal(employee)"
+          >
+            <i class="fas fa-pencil-alt"></i> Edit
+          </button>
+        </div>
+        <div class="w-1/2">
+          <button
+            class="text-white px-4 py-2 rounded-md hover:bg-red-600"
+            (click)="openDeleteModal(employee)"
+          >
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Modal -->
+<ng-template #addModal>
+  <div
+    class="relative z-10"
+    aria-labelledby="add-modal"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+    ></div>
+
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div
+        class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+      >
+        <div
+          class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+        >
+          <button (click)="closeAddModal()" class="absolute top-6 right-6">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3
+                  class="text-base font-semibold leading-6 text-gray-900"
+                  id="modal-title"
+                >
+                  Add employee form
+                </h3>
+                <form
+                  #addForm="ngForm"
+                  (ngSubmit)="onAddEmployee(addForm)"
+
+                >
+                  
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="name"
+                    >
+                      Name
+                    </label>
+                    <input
+                      ngModel
+                      name="name"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="name"
+                      type="text"
+                      placeholder="Name"
+                      required
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="email"
+                    >
+                      Email
+                    </label>
+                    <input
+                      ngModel
+                      name="email"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="email"
+                      type="email"
+                      placeholder="Email"
+                      required
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="jobTitle"
+                    >
+                      Job Title
+                    </label>
+                    <input
+                      ngModel
+                      name="jobTitle"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="jobTitle"
+                      type="text"
+                      placeholder="Job Title"
+                      required
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="phoneNo"
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      ngModel
+                      name="phoneNo"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="phoneNo"
+                      type="text"
+                      placeholder="Phone Number"
+                      required
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="imageUrl"
+                    >
+                      Image URL
+                    </label>
+                    <input
+                      ngModel
+                      name="imageUrl"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="imageUrl"
+                      type="text"
+                      placeholder="Image URL"
+                      required
+                    />
+                  </div>
+                  
+                  <div class="bg-gray-50 px-4 py-3 flex flex-row-reverse">
+                    <button
+                      [disabled]="addForm.invalid"
+                      type="submit"
+                      class="shadow-[0_4px_9px_-4px_#3b71ca] inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                    >
+                      Save
+                    </button>
+                    <button
+                      id="close-add-employee"
+                      (click)="closeAddModal()"
+                      type="button"
+                      class="shadow-[0_4px_9px_-4px_#3b71ca] mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Edit Modal -->
+<ng-template #editModal>
+  <div
+    class="relative z-10"
+    aria-labelledby="edit-modal"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="fixed inset-0 bg-gray-600 bg-opacity-75 transition-opacity"
+    ></div>
+
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div
+        class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+      >
+        <div
+          class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+        >
+          <button (click)="closeEditModal()" class="absolute top-6 right-6">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3
+                  class="text-base font-semibold leading-6 text-gray-900"
+                  id="modal-title"
+                >
+                  Edit form
+                </h3>
+                <form #editForm="ngForm">
+                  <div class="mb-4">
+                    <label class="block text-gray-700 font-bold mb-2" for="id">
+                      ID
+                    </label>
+                    <input
+                      [(ngModel)]="editEmployee.id"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="id"
+                      name="id"
+                      type="text"
+                      placeholder="ID"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="name"
+                    >
+                      Name
+                    </label>
+                    <input
+                      [(ngModel)]="editEmployee.name"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="name"
+                      name="name"
+                      type="text"
+                      placeholder="Name"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="email"
+                    >
+                      Email
+                    </label>
+                    <input
+                      ngModel="{{ editEmployee.email }}"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="Email"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="jobTitle"
+                    >
+                      Job Title
+                    </label>
+                    <input
+                      ngModel="{{ editEmployee.jobTitle }}"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="jobTitle"
+                      name="jobTitle"
+                      type="text"
+                      placeholder="Job Title"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="phoneNo"
+                    >
+                      Phone Number
+                    </label>
+                    <input
+                      ngModel="{{ editEmployee.phoneNo }}"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="phoneNo"
+                      name="phoneNo"
+                      type="text"
+                      placeholder="Phone Number"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="imageUrl"
+                    >
+                      Image URL
+                    </label>
+                    <input
+                      ngModel="{{ editEmployee.imageUrl }}"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="imageUrl"
+                      name="imageUrl"
+                      type="text"
+                      placeholder="Image URL"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label
+                      class="block text-gray-700 font-bold mb-2"
+                      for="employeeCode"
+                    >
+                      Employee Code
+                    </label>
+                    <input
+                      ngModel="{{ editEmployee.employeeCode }}"
+                      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                      id="employeeCode"
+                      name="employeeCode"
+                      type="text"
+                      placeholder="Employee Code"
+                    />
+                  </div>
+                  <div class="bg-gray-50 px-4 py-3 flex flex-row-reverse">
+                    <button
+                      (click)="onUpdateEmployee(editForm.value)"
+                      type="button"
+                      class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:ml-3 sm:w-auto"
+                    >
+                      Save changes
+                    </button>
+                    <button
+                      (click)="closeEditModal()"
+                      type="button"
+                      class="shadow-[0_4px_9px_-4px_#3b71ca] mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<!-- Delete Modal -->
+<ng-template #deleteModal>
+  <div
+    class="relative z-10"
+    aria-labelledby="delete-modal"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+    ></div>
+
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+      <div
+        class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0"
+      >
+        <div
+          class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg"
+        >
+          <button (click)="closeDeleteModal()" class="absolute top-6 right-6">
+            <i class="fas fa-times"></i>
+          </button>
+          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div class="sm:flex sm:items-start">
+              <div
+                class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10"
+              >
+                <svg
+                  class="h-6 w-6 text-red-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+                  />
+                </svg>
+              </div>
+              <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3
+                  class="text-base font-semibold leading-6 text-gray-900"
+                  id="modal-title"
+                >
+                  Delete entry
+                </h3>
+                <div class="mt-2">
+                  <p class="text-sm text-gray-500">
+                    Are you sure you want to delete employee
+                    {{ deleteEmployee.name }}? This entry can't be retrieved
+                    once it is deleted.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+            <button
+              (click)="onDeleteEmployee(deleteEmployee.id)"
+              type="button"
+              class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+            >
+              Delete
+            </button>
+            <button
+              id="delete-cancel-button"
+              (click)="closeDeleteModal()"
+              type="button"
+              class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
